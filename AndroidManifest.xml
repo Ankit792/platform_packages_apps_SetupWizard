@@ -21,7 +21,13 @@
           android:versionCode="5"
           android:sharedUserId="android.uid.system">
 
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES"/>
+    <uses-permission android:name="android.permission.READ_MEDIA_VIDEO"/>
+    <uses-permission android:name="android.permission.READ_MEDIA_AUDIO"/>
     <uses-permission android:name="android.permission.CHANGE_CONFIGURATION" />
+    <permission android:name="com.google.android.setupwizard.SETUP_COMPAT_SERVICE"
+    android:protectionLevel="signature|privileged" />
     <uses-permission android:name="android.permission.STATUS_BAR" />
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
     <uses-permission android:name="android.permission.WRITE_SECURE_SETTINGS" />
@@ -42,13 +48,13 @@
     <uses-permission android:name="lineageos.permission.HARDWARE_ABSTRACTION_ACCESS" />
     <uses-permission android:name="android.permission.BACKUP" />
     <uses-permission android:name="android.permission.NETWORK_SETTINGS" />
-    <uses-permission android:name="lineageos.permission.FINISH_SETUP" />
+    <uses-permission android:name="lineageos.permission.FINISH_SETUP" android:protectionLevel="signatureOrSystem"/>
     <uses-permission android:name="lineageos.permission.WRITE_SETTINGS" />
     <uses-permission android:name="lineageos.permission.WRITE_SECURE_SETTINGS" />
 
     <permission
         android:name="lineageos.permission.FINISH_SETUP"
-        android:protectionLevel="signatureOrSystem" />
+        android:protectionLevel="signatureOrSystem" />  
 
     <protected-broadcast android:name="org.lineageos.setupwizard.LINEAGE_SETUP_COMPLETE"
                          android:permission="lineageos.permission.FINISH_SETUP"/>
@@ -86,7 +92,7 @@
                   android:excludeFromRecents="true"
                   android:configChanges="keyboard|keyboardHidden|mcc|mnc|orientation|screenSize"
                   android:immersive="true"
-                  android:exported="false"
+                  android:exported="true"
                   android:windowSoftInputMode="stateAlwaysHidden"
                   android:theme="@style/NoDisplay">
 
@@ -95,9 +101,10 @@
                 <action android:name="android.intent.action.DEVICE_INITIALIZATION_WIZARD" />
                 <category android:name="android.intent.category.HOME" />
                 <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.SETUP_WIZARD" />
             </intent-filter>
         </activity>
-
+<!-- 
         <activity android:name=".BluetoothSetupActivity"
                   android:label="@string/activity_label_empty"
                   android:excludeFromRecents="true"
@@ -109,7 +116,7 @@
                 <action android:name="org.lineageos.setupwizard.LINEAGE_BLUETOOTH_SETUP" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
-        </activity>
+        </activity> -->
 
         <activity android:name=".WelcomeActivity"
                   android:label="@string/activity_label_empty"
@@ -163,7 +170,7 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".CaptivePortalSetupActivity"
+        <!-- <activity android:name=".CaptivePortalSetupActivity"
                   android:label="@string/activity_label_empty"
                   android:excludeFromRecents="true"
                   android:configChanges="mcc|mnc"
@@ -174,9 +181,9 @@
                 <action android:name="org.lineageos.setupwizard.LINEAGE_CAPTIVE_PORTAL_SETUP" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
-        </activity>
+        </activity> -->
 
-        <activity android:name=".SimMissingActivity"
+        <!-- <activity android:name=".SimMissingActivity"
                   android:label="@string/activity_label_empty"
                   android:excludeFromRecents="true"
                   android:configChanges="mcc|mnc"
@@ -187,9 +194,9 @@
                 <action android:name="org.lineageos.setupwizard.LINEAGE_SIM_MISSING" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
-        </activity>
+        </activity> -->
 
-        <activity android:name=".ChooseDataSimActivity"
+        <!-- <activity android:name=".ChooseDataSimActivity"
                   android:label="@string/activity_label_empty"
                   android:excludeFromRecents="true"
                   android:configChanges="mcc|mnc"
@@ -200,9 +207,9 @@
                 <action android:name="org.lineageos.setupwizard.LINEAGE_CHOOSE_DATA_SIM" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
-        </activity>
+        </activity> -->
 
-        <activity android:name=".MobileDataActivity"
+        <!-- <activity android:name=".MobileDataActivity"
                   android:label="@string/activity_label_empty"
                   android:excludeFromRecents="true"
                   android:configChanges="mcc|mnc"
@@ -213,9 +220,9 @@
                 <action android:name="org.lineageos.setupwizard.LINEAGE_ENABLE_MOBILE_DATA" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
-        </activity>
+        </activity> -->
 
-        <activity android:name=".LocationSettingsActivity"
+        <!-- <activity android:name=".LocationSettingsActivity"
                   android:label="@string/activity_label_empty"
                   android:excludeFromRecents="true"
                   android:configChanges="mcc|mnc"
@@ -226,9 +233,9 @@
                 <action android:name="org.lineageos.setupwizard.LINEAGE_LOCATION_SETTINGS" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
-        </activity>
+        </activity> -->
 
-        <activity android:name=".BiometricActivity"
+        <!-- <activity android:name=".BiometricActivity"
                   android:label="@string/activity_label_empty"
                   android:excludeFromRecents="true"
                   android:configChanges="mcc|mnc"
@@ -239,7 +246,7 @@
                 <action android:name="org.lineageos.setupwizard.LINEAGE_BIOMETRIC_SETTINGS" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
-        </activity>
+        </activity> -->
 
         <activity android:name=".ScreenLockActivity"
                   android:label="@string/activity_label_empty"
@@ -254,7 +261,7 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".backup.RestoreIntroActivity"
+        <!-- <activity android:name=".backup.RestoreIntroActivity"
                   android:label="@string/activity_label_empty"
                   android:excludeFromRecents="true"
                   android:configChanges="mcc|mnc"
@@ -265,7 +272,7 @@
                 <action android:name="org.lineageos.setupwizard.LINEAGE_RESTORE_BACKUP"/>
                 <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
-        </activity>
+        </activity> -->
 
         <activity android:name=".FinishActivity"
                   android:label="@string/activity_label_empty"

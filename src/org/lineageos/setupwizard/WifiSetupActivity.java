@@ -42,7 +42,7 @@ public class WifiSetupActivity extends WrapperSubBaseActivity {
         }
         intent.putExtra(WizardManagerHelper.EXTRA_IS_SETUP_FLOW, true);
         intent.putExtra(EXTRA_PREFS_SHOW_BUTTON_BAR, true);
-        intent.putExtra(EXTRA_PREFS_SHOW_SKIP, true);
+        intent.putExtra(EXTRA_PREFS_SHOW_SKIP, false);
         intent.putExtra(EXTRA_PREFS_SET_BACK_TEXT, (String) null);
         intent.putExtra(EXTRA_ENABLE_NEXT_ON_CONNECT, true);
         startSubactivity(intent, REQUEST_CODE_SETUP_WIFI);

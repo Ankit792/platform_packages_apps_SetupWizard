@@ -29,6 +29,9 @@ import android.util.Log;
 import org.lineageos.setupwizard.util.PhoneMonitor;
 import org.lineageos.setupwizard.util.SetupWizardUtils;
 
+import android.provider.Settings;
+import org.lineageos.setupwizard.util.SetupWizardUtils;
+
 public class SetupWizardExitActivity extends BaseSetupWizardActivity {
 
     private static final String TAG = SetupWizardExitActivity.class.getSimpleName();
@@ -39,6 +42,10 @@ public class SetupWizardExitActivity extends BaseSetupWizardActivity {
         if (LOGV) {
             Log.v(TAG, "onCreate savedInstanceState=" + savedInstanceState);
         }
+        SetupWizardUtils.finishSetupWizard(this);
+        // Settings.Global.putInt(getContentResolver(), Settings.Global.DEVICE_PROVISIONED, 1);
+        // Settings.Secure.putInt(getContentResolver(), Settings.Secure.USER_SETUP_COMPLETE, 1);
+        Log.d(TAG, "Ankit Setup Complete in Wizard Exit Activity");
         SetupWizardUtils.enableCaptivePortalDetection(this);
         PhoneMonitor.onSetupFinished();
         launchHome();

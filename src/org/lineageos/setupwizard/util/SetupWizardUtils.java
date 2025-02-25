@@ -246,20 +246,20 @@ public class SetupWizardUtils {
 
     public static void disableComponentsForMissingFeatures(Context context) {
         if (!hasLeanback(context)) {
-            disableComponent(context, BluetoothSetupActivity.class);
+            // disableComponent(context, BluetoothSetupActivity.class);
         }
         if (!hasBiometric(context)) {
-            disableComponent(context, BiometricActivity.class);
+            // disableComponent(context, BiometricActivity.class);
         }
         if (!hasTelephony(context)) {
-            disableComponent(context, MobileDataActivity.class);
-            disableComponent(context, SimMissingActivity.class);
-            disableComponent(context, ChooseDataSimActivity.class);
+            // disableComponent(context, MobileDataActivity.class);
+            // disableComponent(context, SimMissingActivity.class);
+            // disableComponent(context, ChooseDataSimActivity.class);
         } else if (!simMissing()) {
-            disableComponent(context, SimMissingActivity.class);
+            // disableComponent(context, SimMissingActivity.class);
         }
         if (!isMultiSimDevice() || singleSimInserted()) {
-            disableComponent(context, ChooseDataSimActivity.class);
+            // disableComponent(context, ChooseDataSimActivity.class);
         }
         if (!hasWifi(context) || isEthernetConnected(context)) {
             disableComponent(context, WifiSetupActivity.class);

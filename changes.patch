@@ -1,0 +1,448 @@
+diff --git a/Android.bp b/Android.bp
+index 5572306..7faa3a1 100644
+--- a/Android.bp
++++ b/Android.bp
+@@ -15,7 +15,7 @@
+ //
+ 
+ android_app {
+-    name: "SetupWizard",
++    name: "TSetupWizard",
+ 
+     srcs: ["src/**/*.java"],
+ 
+diff --git a/AndroidManifest.xml b/AndroidManifest.xml
+index afe6d5c..5bf2481 100644
+--- a/AndroidManifest.xml
++++ b/AndroidManifest.xml
+@@ -21,7 +21,13 @@
+           android:versionCode="5"
+           android:sharedUserId="android.uid.system">
+ 
++    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
++    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES"/>
++    <uses-permission android:name="android.permission.READ_MEDIA_VIDEO"/>
++    <uses-permission android:name="android.permission.READ_MEDIA_AUDIO"/>
+     <uses-permission android:name="android.permission.CHANGE_CONFIGURATION" />
++    <permission android:name="com.google.android.setupwizard.SETUP_COMPAT_SERVICE"
++    android:protectionLevel="signature|privileged" />
+     <uses-permission android:name="android.permission.STATUS_BAR" />
+     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
+     <uses-permission android:name="android.permission.WRITE_SECURE_SETTINGS" />
+@@ -42,13 +48,13 @@
+     <uses-permission android:name="lineageos.permission.HARDWARE_ABSTRACTION_ACCESS" />
+     <uses-permission android:name="android.permission.BACKUP" />
+     <uses-permission android:name="android.permission.NETWORK_SETTINGS" />
+-    <uses-permission android:name="lineageos.permission.FINISH_SETUP" />
++    <uses-permission android:name="lineageos.permission.FINISH_SETUP" android:protectionLevel="signatureOrSystem"/>
+     <uses-permission android:name="lineageos.permission.WRITE_SETTINGS" />
+     <uses-permission android:name="lineageos.permission.WRITE_SECURE_SETTINGS" />
+ 
+     <permission
+         android:name="lineageos.permission.FINISH_SETUP"
+-        android:protectionLevel="signatureOrSystem" />
++        android:protectionLevel="signatureOrSystem" />  
+ 
+     <protected-broadcast android:name="org.lineageos.setupwizard.LINEAGE_SETUP_COMPLETE"
+                          android:permission="lineageos.permission.FINISH_SETUP"/>
+@@ -86,7 +92,7 @@
+                   android:excludeFromRecents="true"
+                   android:configChanges="keyboard|keyboardHidden|mcc|mnc|orientation|screenSize"
+                   android:immersive="true"
+-                  android:exported="false"
++                  android:exported="true"
+                   android:windowSoftInputMode="stateAlwaysHidden"
+                   android:theme="@style/NoDisplay">
+ 
+@@ -95,9 +101,10 @@
+                 <action android:name="android.intent.action.DEVICE_INITIALIZATION_WIZARD" />
+                 <category android:name="android.intent.category.HOME" />
+                 <category android:name="android.intent.category.DEFAULT" />
++                <category android:name="android.intent.category.SETUP_WIZARD" />
+             </intent-filter>
+         </activity>
+-
++<!-- 
+         <activity android:name=".BluetoothSetupActivity"
+                   android:label="@string/activity_label_empty"
+                   android:excludeFromRecents="true"
+@@ -109,7 +116,7 @@
+                 <action android:name="org.lineageos.setupwizard.LINEAGE_BLUETOOTH_SETUP" />
+                 <category android:name="android.intent.category.DEFAULT" />
+             </intent-filter>
+-        </activity>
++        </activity> -->
+ 
+         <activity android:name=".WelcomeActivity"
+                   android:label="@string/activity_label_empty"
+@@ -163,7 +170,7 @@
+             </intent-filter>
+         </activity>
+ 
+-        <activity android:name=".CaptivePortalSetupActivity"
++        <!-- <activity android:name=".CaptivePortalSetupActivity"
+                   android:label="@string/activity_label_empty"
+                   android:excludeFromRecents="true"
+                   android:configChanges="mcc|mnc"
+@@ -174,9 +181,9 @@
+                 <action android:name="org.lineageos.setupwizard.LINEAGE_CAPTIVE_PORTAL_SETUP" />
+                 <category android:name="android.intent.category.DEFAULT" />
+             </intent-filter>
+-        </activity>
++        </activity> -->
+ 
+-        <activity android:name=".SimMissingActivity"
++        <!-- <activity android:name=".SimMissingActivity"
+                   android:label="@string/activity_label_empty"
+                   android:excludeFromRecents="true"
+                   android:configChanges="mcc|mnc"
+@@ -187,9 +194,9 @@
+                 <action android:name="org.lineageos.setupwizard.LINEAGE_SIM_MISSING" />
+                 <category android:name="android.intent.category.DEFAULT" />
+             </intent-filter>
+-        </activity>
++        </activity> -->
+ 
+-        <activity android:name=".ChooseDataSimActivity"
++        <!-- <activity android:name=".ChooseDataSimActivity"
+                   android:label="@string/activity_label_empty"
+                   android:excludeFromRecents="true"
+                   android:configChanges="mcc|mnc"
+@@ -200,9 +207,9 @@
+                 <action android:name="org.lineageos.setupwizard.LINEAGE_CHOOSE_DATA_SIM" />
+                 <category android:name="android.intent.category.DEFAULT" />
+             </intent-filter>
+-        </activity>
++        </activity> -->
+ 
+-        <activity android:name=".MobileDataActivity"
++        <!-- <activity android:name=".MobileDataActivity"
+                   android:label="@string/activity_label_empty"
+                   android:excludeFromRecents="true"
+                   android:configChanges="mcc|mnc"
+@@ -213,9 +220,9 @@
+                 <action android:name="org.lineageos.setupwizard.LINEAGE_ENABLE_MOBILE_DATA" />
+                 <category android:name="android.intent.category.DEFAULT" />
+             </intent-filter>
+-        </activity>
++        </activity> -->
+ 
+-        <activity android:name=".LocationSettingsActivity"
++        <!-- <activity android:name=".LocationSettingsActivity"
+                   android:label="@string/activity_label_empty"
+                   android:excludeFromRecents="true"
+                   android:configChanges="mcc|mnc"
+@@ -226,9 +233,9 @@
+                 <action android:name="org.lineageos.setupwizard.LINEAGE_LOCATION_SETTINGS" />
+                 <category android:name="android.intent.category.DEFAULT" />
+             </intent-filter>
+-        </activity>
++        </activity> -->
+ 
+-        <activity android:name=".BiometricActivity"
++        <!-- <activity android:name=".BiometricActivity"
+                   android:label="@string/activity_label_empty"
+                   android:excludeFromRecents="true"
+                   android:configChanges="mcc|mnc"
+@@ -239,7 +246,7 @@
+                 <action android:name="org.lineageos.setupwizard.LINEAGE_BIOMETRIC_SETTINGS" />
+                 <category android:name="android.intent.category.DEFAULT" />
+             </intent-filter>
+-        </activity>
++        </activity> -->
+ 
+         <activity android:name=".ScreenLockActivity"
+                   android:label="@string/activity_label_empty"
+@@ -254,7 +261,7 @@
+             </intent-filter>
+         </activity>
+ 
+-        <activity android:name=".backup.RestoreIntroActivity"
++        <!-- <activity android:name=".backup.RestoreIntroActivity"
+                   android:label="@string/activity_label_empty"
+                   android:excludeFromRecents="true"
+                   android:configChanges="mcc|mnc"
+@@ -265,7 +272,7 @@
+                 <action android:name="org.lineageos.setupwizard.LINEAGE_RESTORE_BACKUP"/>
+                 <category android:name="android.intent.category.DEFAULT"/>
+             </intent-filter>
+-        </activity>
++        </activity> -->
+ 
+         <activity android:name=".FinishActivity"
+                   android:label="@string/activity_label_empty"
+diff --git a/privapp_whitelist_org.lineageos.setupwizard.xml b/privapp_whitelist_org.lineageos.setupwizard.xml
+index 3b1e5b6..5444170 100644
+--- a/privapp_whitelist_org.lineageos.setupwizard.xml
++++ b/privapp_whitelist_org.lineageos.setupwizard.xml
+@@ -18,14 +18,17 @@
+     <privapp-permissions package="org.lineageos.setupwizard">
+         <permission name="android.permission.BACKUP"/>
+         <permission name="android.permission.CHANGE_COMPONENT_ENABLED_STATE"/>
++        <permission name="com.google.android.setupwizard.SETUP_COMPAT_SERVICE"/> 
+         <permission name="android.permission.CHANGE_CONFIGURATION"/>
+         <permission name="android.permission.GET_ACCOUNTS_PRIVILEGED"/>
+         <permission name="android.permission.INTERACT_ACROSS_USERS"/>
+         <permission name="android.permission.MANAGE_USERS"/>
+         <permission name="android.permission.READ_PRIVILEGED_PHONE_STATE"/>
++        <permission name="android.permission.MANAGE_EXTERNAL_STORAGE"/>
+         <permission name="android.permission.SET_TIME"/>
+         <permission name="android.permission.SET_TIME_ZONE"/>
+         <permission name="android.permission.STATUS_BAR"/>
+         <permission name="android.permission.WRITE_SECURE_SETTINGS"/>
++
+     </privapp-permissions>
+ </permissions>
+diff --git a/res/raw/lineage_wizard_script.xml b/res/raw/lineage_wizard_script.xml
+index d91d5cf..7de1396 100644
+--- a/res/raw/lineage_wizard_script.xml
++++ b/res/raw/lineage_wizard_script.xml
+@@ -28,45 +28,45 @@
+         <result wizard:action="locale" />
+     </WizardAction>
+     <WizardAction wizard:uri="intent:#Intent;action=org.lineageos.setupwizard.LINEAGE_LOCALE;end" id="locale">
+-        <result wizard:action="datetime" />
++        <result wizard:action="wifi_setup" />
+     </WizardAction>
+ 
+-    <WizardAction wizard:uri="intent:#Intent;action=org.lineageos.setupwizard.LINEAGE_DATETIME;end" id="datetime">
++    <!-- <WizardAction wizard:uri="intent:#Intent;action=org.lineageos.setupwizard.LINEAGE_DATETIME;end" id="datetime">
+         <result wizard:action="wifi_setup" />
+-    </WizardAction>
++    </WizardAction> -->
+ 
+     <WizardAction wizard:uri="intent:#Intent;action=org.lineageos.setupwizard.LINEAGE_WIFI_SETUP;end" id="wifi_setup">
+-        <result wizard:action="sim_missing" />
+-    </WizardAction>
+-
+-    <WizardAction wizard:uri="intent:#Intent;action=org.lineageos.setupwizard.LINEAGE_SIM_MISSING;end" id="sim_missing">
+-        <result wizard:resultCode="1" wizard:action="location_settings" wizard:name="skip_sim" />
+-        <result wizard:action="choose_data_sim" />
++        <result wizard:action="finish" />
+     </WizardAction>
+ 
+-    <WizardAction wizard:uri="intent:#Intent;action=org.lineageos.setupwizard.LINEAGE_CHOOSE_DATA_SIM;end" id="choose_data_sim">
+-        <result wizard:action="enable_mobile_data" />
+-    </WizardAction>
++<!--    <WizardAction wizard:uri="intent:#Intent;action=org.lineageos.setupwizard.LINEAGE_SIM_MISSING;end" id="sim_missing">-->
++<!--        <result wizard:resultCode="1" wizard:action="location_settings" wizard:name="skip_sim" />-->
++<!--        <result wizard:action="choose_data_sim" />-->
++<!--    </WizardAction>-->
+ 
+-    <WizardAction wizard:uri="intent:#Intent;action=org.lineageos.setupwizard.LINEAGE_ENABLE_MOBILE_DATA;end" id="enable_mobile_data">
+-        <result wizard:action="location_settings" />
+-    </WizardAction>
++<!--    <WizardAction wizard:uri="intent:#Intent;action=org.lineageos.setupwizard.LINEAGE_CHOOSE_DATA_SIM;end" id="choose_data_sim">-->
++<!--        <result wizard:action="enable_mobile_data" />-->
++<!--    </WizardAction>-->
+ 
+-    <WizardAction wizard:uri="intent:#Intent;action=org.lineageos.setupwizard.LINEAGE_LOCATION_SETTINGS;end" id="location_settings">
+-        <result wizard:action="biometric_settings" />
+-    </WizardAction>
++<!--    <WizardAction wizard:uri="intent:#Intent;action=org.lineageos.setupwizard.LINEAGE_ENABLE_MOBILE_DATA;end" id="enable_mobile_data">-->
++<!--        <result wizard:action="location_settings" />-->
++<!--    </WizardAction>-->
+ 
+-    <WizardAction wizard:uri="intent:#Intent;action=org.lineageos.setupwizard.LINEAGE_BIOMETRIC_SETTINGS;end" id="biometric_settings">
+-        <result wizard:action="lockscreen_settings" />
+-    </WizardAction>
++<!--    <WizardAction wizard:uri="intent:#Intent;action=org.lineageos.setupwizard.LINEAGE_LOCATION_SETTINGS;end" id="location_settings">-->
++<!--        <result wizard:action="biometric_settings" />-->
++<!--    </WizardAction>-->
+ 
+-    <WizardAction wizard:uri="intent:#Intent;action=org.lineageos.setupwizard.LINEAGE_LOCKSCREEN_SETTINGS;end" id="lockscreen_settings">
+-        <result wizard:action="restore" />
+-    </WizardAction>
++<!--    <WizardAction wizard:uri="intent:#Intent;action=org.lineageos.setupwizard.LINEAGE_BIOMETRIC_SETTINGS;end" id="biometric_settings">-->
++<!--        <result wizard:action="lockscreen_settings" />-->
++<!--    </WizardAction>-->
+ 
+-    <WizardAction wizard:uri="intent:#Intent;action=org.lineageos.setupwizard.LINEAGE_RESTORE_BACKUP;end" id="restore">
++    <!-- <WizardAction wizard:uri="intent:#Intent;action=org.lineageos.setupwizard.LINEAGE_LOCKSCREEN_SETTINGS;end" id="lockscreen_settings">
+         <result wizard:action="finish" />
+-    </WizardAction>
++    </WizardAction> -->
++
++<!--    <WizardAction wizard:uri="intent:#Intent;action=org.lineageos.setupwizard.LINEAGE_RESTORE_BACKUP;end" id="restore">-->
++<!--        <result wizard:action="finish" />-->
++<!--    </WizardAction>-->
+ 
+     <WizardAction wizard:uri="intent:#Intent;action=org.lineageos.setupwizard.LINEAGE_SETUP_COMPLETE;end" id="finish">
+         <result wizard:action="exit" />
+diff --git a/src/org/lineageos/setupwizard/SetupWizardActivity.java b/src/org/lineageos/setupwizard/SetupWizardActivity.java
+index 41fbb9a..03cab36 100644
+--- a/src/org/lineageos/setupwizard/SetupWizardActivity.java
++++ b/src/org/lineageos/setupwizard/SetupWizardActivity.java
+@@ -33,31 +33,53 @@ import com.google.android.setupcompat.util.WizardManagerHelper;
+ import org.lineageos.setupwizard.util.SetupWizardUtils;
+ import org.lineageos.setupwizard.wizardmanager.WizardManager;
+ 
++import android.provider.Settings;
++
+ public class SetupWizardActivity extends BaseSetupWizardActivity {
+     private static final String TAG = SetupWizardActivity.class.getSimpleName();
+ 
+     @Override
+     protected void onCreate(@Nullable Bundle savedInstanceState) {
+         super.onCreate(savedInstanceState);
++        // Settings.Global.putInt(getContentResolver(), Settings.Global.DEVICE_PROVISIONED, 0);
++        // Settings.Secure.putInt(getContentResolver(), Settings.Secure.USER_SETUP_COMPLETE, 0);
++        
++        Log.d(TAG, "Ankit SetupWizardActivity onCreate called.");
++
+         if (LOGV) {
+             Log.v(TAG, "onCreate savedInstanceState=" + savedInstanceState);
+         }
++
++         // Log whether the user setup is complete
++        boolean isSetupComplete = WizardManagerHelper.isUserSetupComplete(this);
++        Log.d(TAG, "Ankit Is user setup complete? " + isSetupComplete);
++
+         if (WizardManagerHelper.isUserSetupComplete(this)) {
++            Log.d(TAG, "Ankit User setup is complete. Finishing SetupWizardActivity.");
+             SetupWizardUtils.finishSetupWizard(this);
+             finish();
+         } else {
++            Log.d(TAG, "Ankit User setup is not complete. Starting setup process.");
++            Settings.Global.putInt(getContentResolver(), Settings.Global.DEVICE_PROVISIONED, 0);
++            Settings.Secure.putInt(getContentResolver(), Settings.Secure.USER_SETUP_COMPLETE, 0);
++        
+             onSetupStart();
++            Log.d(TAG, "Ankit Enabling WizardManager.");
+             SetupWizardUtils.enableComponent(this, WizardManager.class);
+             Intent intent = new Intent(ACTION_LOAD);
+             if (isPrimaryUser()) {
+                 intent.putExtra(EXTRA_SCRIPT_URI, getString(R.string.lineage_wizard_script_uri));
++                Log.d(TAG, "Ankit Primary user detected. Using script URI: ");
+             } else {
+                 intent.putExtra(EXTRA_SCRIPT_URI,
+                         getString(R.string.lineage_wizard_script_user_uri));
++                Log.d(TAG, "Ankit Non-primary user detected. Using script user URI: ");
+             }
+             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | FLAG_GRANT_READ_URI_PERMISSION);
+             startActivity(intent);
++            Log.d(TAG, "Ankit WizardManager started. Finishing SetupWizardActivity.");
+             finish();
+         }
++        Log.d(TAG, "Ankit SetupWizardActivity onCreate finished.");
+     }
+ }
+diff --git a/src/org/lineageos/setupwizard/SetupWizardExitActivity.java b/src/org/lineageos/setupwizard/SetupWizardExitActivity.java
+index a209ebb..50ebb57 100644
+--- a/src/org/lineageos/setupwizard/SetupWizardExitActivity.java
++++ b/src/org/lineageos/setupwizard/SetupWizardExitActivity.java
+@@ -29,6 +29,9 @@ import android.util.Log;
+ import org.lineageos.setupwizard.util.PhoneMonitor;
+ import org.lineageos.setupwizard.util.SetupWizardUtils;
+ 
++import android.provider.Settings;
++import org.lineageos.setupwizard.util.SetupWizardUtils;
++
+ public class SetupWizardExitActivity extends BaseSetupWizardActivity {
+ 
+     private static final String TAG = SetupWizardExitActivity.class.getSimpleName();
+@@ -39,6 +42,10 @@ public class SetupWizardExitActivity extends BaseSetupWizardActivity {
+         if (LOGV) {
+             Log.v(TAG, "onCreate savedInstanceState=" + savedInstanceState);
+         }
++        SetupWizardUtils.finishSetupWizard(this);
++        // Settings.Global.putInt(getContentResolver(), Settings.Global.DEVICE_PROVISIONED, 1);
++        // Settings.Secure.putInt(getContentResolver(), Settings.Secure.USER_SETUP_COMPLETE, 1);
++        Log.d(TAG, "Ankit Setup Complete in Wizard Exit Activity");
+         SetupWizardUtils.enableCaptivePortalDetection(this);
+         PhoneMonitor.onSetupFinished();
+         launchHome();
+diff --git a/src/org/lineageos/setupwizard/WifiSetupActivity.java b/src/org/lineageos/setupwizard/WifiSetupActivity.java
+index e705b92..301c243 100644
+--- a/src/org/lineageos/setupwizard/WifiSetupActivity.java
++++ b/src/org/lineageos/setupwizard/WifiSetupActivity.java
+@@ -42,7 +42,7 @@ public class WifiSetupActivity extends WrapperSubBaseActivity {
+         }
+         intent.putExtra(WizardManagerHelper.EXTRA_IS_SETUP_FLOW, true);
+         intent.putExtra(EXTRA_PREFS_SHOW_BUTTON_BAR, true);
+-        intent.putExtra(EXTRA_PREFS_SHOW_SKIP, true);
++        intent.putExtra(EXTRA_PREFS_SHOW_SKIP, false);
+         intent.putExtra(EXTRA_PREFS_SET_BACK_TEXT, (String) null);
+         intent.putExtra(EXTRA_ENABLE_NEXT_ON_CONNECT, true);
+         startSubactivity(intent, REQUEST_CODE_SETUP_WIFI);
+diff --git a/src/org/lineageos/setupwizard/util/SetupWizardUtils.java b/src/org/lineageos/setupwizard/util/SetupWizardUtils.java
+index 3e84f9c..59bae62 100644
+--- a/src/org/lineageos/setupwizard/util/SetupWizardUtils.java
++++ b/src/org/lineageos/setupwizard/util/SetupWizardUtils.java
+@@ -246,20 +246,20 @@ public class SetupWizardUtils {
+ 
+     public static void disableComponentsForMissingFeatures(Context context) {
+         if (!hasLeanback(context)) {
+-            disableComponent(context, BluetoothSetupActivity.class);
++            // disableComponent(context, BluetoothSetupActivity.class);
+         }
+         if (!hasBiometric(context)) {
+-            disableComponent(context, BiometricActivity.class);
++            // disableComponent(context, BiometricActivity.class);
+         }
+         if (!hasTelephony(context)) {
+-            disableComponent(context, MobileDataActivity.class);
+-            disableComponent(context, SimMissingActivity.class);
+-            disableComponent(context, ChooseDataSimActivity.class);
++            // disableComponent(context, MobileDataActivity.class);
++            // disableComponent(context, SimMissingActivity.class);
++            // disableComponent(context, ChooseDataSimActivity.class);
+         } else if (!simMissing()) {
+-            disableComponent(context, SimMissingActivity.class);
++            // disableComponent(context, SimMissingActivity.class);
+         }
+         if (!isMultiSimDevice() || singleSimInserted()) {
+-            disableComponent(context, ChooseDataSimActivity.class);
++            // disableComponent(context, ChooseDataSimActivity.class);
+         }
+         if (!hasWifi(context) || isEthernetConnected(context)) {
+             disableComponent(context, WifiSetupActivity.class);
+diff --git a/tests/Android.mk b/tests/Android.mk
+index 623a4dd..d20cdaa 100644
+--- a/tests/Android.mk
++++ b/tests/Android.mk
+@@ -8,7 +8,7 @@ LOCAL_PRIVILEGED_MODULE := true
+ # Include all test java files.
+ LOCAL_SRC_FILES := $(call all-java-files-under, src)
+ 
+-LOCAL_PACKAGE_NAME := SetupWizardTests
++LOCAL_PACKAGE_NAME := SetupWizardTestsT
+ LOCAL_CERTIFICATE := platform
+ 
+ LOCAL_PRIVATE_PLATFORM_APIS := true
+diff --git a/tests/AndroidManifest.xml b/tests/AndroidManifest.xml
+index ea329d3..6ac254e 100644
+--- a/tests/AndroidManifest.xml
++++ b/tests/AndroidManifest.xml
+@@ -24,6 +24,8 @@
+     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/> >
+     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
+     <uses-permission android:name="android.permission.INTERNET"/>
++    <permission android:name="com.google.android.setupwizard.SETUP_COMPAT_SERVICE"
++    android:protectionLevel="signature|privileged" />
+     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+     <uses-permission android:name="android.permission.USE_CREDENTIALS" />
+     <uses-permission android:name="android.permission.MANAGE_ACCOUNTS" />
+@@ -40,8 +42,9 @@
+                   android:launchMode="singleTask">
+             <intent-filter>
+                 <action android:name="android.intent.action.MAIN" />
++                <action android:name="android.intent.action.DEVICE_INITIALIZATION_WIZARD" />
++                <category android:name="android.intent.category.HOME" />
+                 <category android:name="android.intent.category.DEFAULT" />
+-                <category android:name="android.intent.category.LAUNCHER" />
+             </intent-filter>
+         </activity>
+     </application>
+diff --git a/tests/privapp_whitelist_org.lineageos.setupwizard-tests.xml b/tests/privapp_whitelist_org.lineageos.setupwizard-tests.xml
+index 255596c..1542d15 100644
+--- a/tests/privapp_whitelist_org.lineageos.setupwizard-tests.xml
++++ b/tests/privapp_whitelist_org.lineageos.setupwizard-tests.xml
+@@ -19,6 +19,7 @@
+         <permission name="android.permission.CHANGE_COMPONENT_ENABLED_STATE"/>
+         <permission name="android.permission.CHANGE_CONFIGURATION"/>
+         <permission name="android.permission.STATUS_BAR"/>
++        <permission name="com.google.android.setupwizard.SETUP_COMPAT_SERVICE"/>
+         <permission name="android.permission.WRITE_SECURE_SETTINGS"/>
+     </privapp-permissions>
+ </permissions>

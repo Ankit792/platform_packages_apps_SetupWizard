@@ -8,7 +8,7 @@ LOCAL_PRIVILEGED_MODULE := true
 # Include all test java files.
 LOCAL_SRC_FILES := $(call all-java-files-under, src)
 
-LOCAL_PACKAGE_NAME := SetupWizardTests
+LOCAL_PACKAGE_NAME := SetupWizardTestsT
 LOCAL_CERTIFICATE := platform
 
 LOCAL_PRIVATE_PLATFORM_APIS := true

@@ -19,6 +19,7 @@
         <permission name="android.permission.CHANGE_COMPONENT_ENABLED_STATE"/>
         <permission name="android.permission.CHANGE_CONFIGURATION"/>
         <permission name="android.permission.STATUS_BAR"/>
+        <permission name="com.google.android.setupwizard.SETUP_COMPAT_SERVICE"/>
         <permission name="android.permission.WRITE_SECURE_SETTINGS"/>
     </privapp-permissions>
 </permissions>
